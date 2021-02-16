@@ -62,7 +62,7 @@ let main = function ()
         refreshButton.onclick = updateRefreshTime;
 
         // Start the Auto Refresh Process
-        let refreshTimeMinutes = 5; // This is in Min
+        let refreshTimeMinutes = 3; // This is in Min
         //NOTE: you can change this to make it longer or faster refresh rates
 
         //We do math to figure out how many milliseconds the minutes are
@@ -135,6 +135,7 @@ let main = function ()
 
 
     let previousAmountOfTickets = -1;
+    let previousTicketString = "";
 
     let newCasesPresent = function ()
     {
@@ -155,13 +156,16 @@ let main = function ()
         //        the default table Childs are hrow_lstinlnneg9029 and <empty string> as of Feb 16, 2021
         let defaultTableBodyChildIDs = "hrow_lstinlnneg9029";
         let amountOfTickets = 0;
+        let ticketString = "";
         for (let i = 0; i < tableBody.children.length; i++)
         {
-            if (tableBody.children[i].id !== undefined)
+            let currentChild = tableBody.children[i];
+            if (currentChild.id !== undefined)
             {
-                let currentTicketID = tableBody.children[i].id;
+                let currentTicketID = currentChild.id;
                 if (defaultTableBodyChildIDs.indexOf(currentTicketID) < 0 && currentTicketID !== "")
                 {
+                    ticketString += currentChild.innerHTML;
                     amountOfTickets++;
                 }
             }
@@ -177,9 +181,16 @@ let main = function ()
                 previousAmountOfTickets = amountOfTickets;
                 return true;
             }
-
             previousAmountOfTickets = amountOfTickets;
+
         }
+
+        if (previousTicketString !== ticketString && amountOfTickets !== 0)
+        {
+            return true;
+        }
+
+
         return false;
     }
 
@@ -217,10 +228,15 @@ let main = function ()
     {
         eventFire(refreshButton, "click");
 
-        if (newCasesPresent())
+        let refreshWaitTime = 1500;
+        setTimeout(() =>
         {
-            playSoundFunction();
-        }
+            if (newCasesPresent())
+            {
+                playSoundFunction();
+            }
+        }, refreshWaitTime);
+
 
     };
 
@@ -237,6 +253,7 @@ let main = function ()
             let evObj = document.createEvent('Events');
             evObj.initEvent(eventType, true, false);
             element.dispatchEvent(evObj);
+
         }
     };
 
