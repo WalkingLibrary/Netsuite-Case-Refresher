@@ -28,6 +28,15 @@ let main = function ()
 
         let casesDivNodeList = document.querySelectorAll(casesDivSpecialIdentifier);
 
+        if (casesDivNodeList.length > 1 || casesDivNodeList.length === 0)
+        {
+            console.error("Could not Find the Cases Div.\n" +
+                "Make sure you are on the Dashboard Page and have the Cases Tab as a Widget.\n" +
+                "If you are on the Dashboard page with the Cases Tab present the Script may have Broke.\n" +
+                "Sorry for the Inconvenience :(");
+            return;
+        }
+
         let caseDiv = casesDivNodeList.item(0);
 
 
@@ -76,6 +85,7 @@ let main = function ()
         //Display the UI
         displayAutoRefreshStatus();
         recursiveFunction();
+        console.log("Auto Refresher Script Setup Successful");
     };
 
 
