@@ -23,7 +23,11 @@ let main = function ()
         console.log("Setting Up Auto Refresh");
 
         //Grab the Cases Element
-        let casesDivNodeList = document.querySelectorAll('[data-portlet-id="-9029"]');
+
+        let casesDivSpecialIdentifier = '[data-portlet-id="-9029"]';
+
+        let casesDivNodeList = document.querySelectorAll(casesDivSpecialIdentifier);
+
         let caseDiv = casesDivNodeList.item(0);
 
 
@@ -49,10 +53,17 @@ let main = function ()
             let currentTime = new Date();
             if (shouldRefresh)
             {
-                let refreshTime = currentTime.getHours() + ":" + currentTime.getMinutes();
+                let currentMinutes = "" + currentTime.getMinutes();
+                currentMinutes = currentMinutes.length >= 2 ? currentMinutes : "0" + currentMinutes;
+                let refreshTime = currentTime.getHours() + ":" + currentMinutes;
+                //Print the Refresh time to the Console
                 console.log("Refreshing Cases - " + refreshTime);
+
+                //Update the Refresh time on the Refresh UI
                 let lastRefreshDisplay = document.getElementById("lastRefresh");
                 lastRefreshDisplay.innerText = "Last Refresh: " + refreshTime;
+
+
                 refreshCases(refreshButton);
             }
             setTimeout(() =>
@@ -70,6 +81,14 @@ let main = function ()
 
     let followChildPath = function (childPathArray, elementToTraverse)
     {
+        /* This Function takes a int array of the child placements and follows the
+         * path down
+         * Example: followChildPath([0, 1, 3], divElement)
+         * This would return the Child of the Fourth Child of the Second Child of the First Child of the ElementToTraverse
+         * Kinda not reliable and may need to change in the future as netsuite isn't my program.
+         * Was the easiest way to grab the refresh div as they don't place a special id on it.
+         * as of Feb 16, 2021
+         *  */
         let currentElement = elementToTraverse;
         for (let i = 0; i < childPathArray.length; i++)
         {
@@ -90,12 +109,22 @@ let main = function ()
 
     let newCasesPresent = function ()
     {
+        /* Process to See if new Cases Are Present
+         * Get the Table and the Table Body holding the Cases
+         * Check the contents of the Table for Additions
+         *
+         *  */
+
+        //Get the Table and the Table Body holding the Cases
         let tableID = "neg9029__tab";
         let casesTable = document.getElementById(tableID);
         let tableBody = casesTable.children[1];
 
-        let defaultTableBodyChildIDs = "hrow_lstinlnneg9029";
 
+        //Check the contents of the Table for Additions
+        //Note: The table body is never empty so we have to weed out the things that are always there
+        //        the default table Childs are hrow_lstinlnneg9029 and <empty string> as of Feb 16, 2021
+        let defaultTableBodyChildIDs = "hrow_lstinlnneg9029";
         let amountOfTickets = 0;
         for (let i = 0; i < tableBody.children.length; i++)
         {
@@ -109,6 +138,7 @@ let main = function ()
             }
         }
 
+        //To avoid spaming the notification sound we only return true when the amount of tickets is greater than the previous amount
         if (previousAmountOfTickets !== amountOfTickets)
         {
 
@@ -167,6 +197,7 @@ let main = function ()
 
     let eventFire = function (element, eventType)
     {
+        //This Function Simulates a Click on the Button
         if (element.fireEvent)
         {
             element.fireEvent('on' + eventType);
@@ -181,6 +212,13 @@ let main = function ()
 
     let displayAutoRefreshStatus = function ()
     {
+        /* Process for Displaying the Refresh UI/Status
+         * Create the container div to hold everything
+         * Create the Toggle Button
+         *
+         *  */
+
+        //Create the container div to hold everything
         let autoRefreshStatusDiv = document.createElement("div");
         //yuck css in js
         autoRefreshStatusDiv.innerHTML = "<h6>Auto Refresher " +
@@ -198,20 +236,18 @@ let main = function ()
             " width:200px;" +
             " height:50px;";
 
+
         document.body.appendChild(autoRefreshStatusDiv);
 
+        //Create the Toggle Button
         let refresherToggleButton = document.getElementById("refresherToggleButton");
 
         refresherToggleButton.onclick = function (event)
         {
-            let isOn = false;
-            if (refresherToggleButton.value === "ON")
-            {
-                isOn = true;
-            }
-
-            refresherToggleButton.value = isOn ? "OFF" : "ON";
-            shouldRefresh = !isOn;
+            //Note: this code runs when the Toggle Button is clicked
+            //Toggles the Refresher to off or on
+            refresherToggleButton.value = shouldRefresh ? "OFF" : "ON";
+            shouldRefresh = !shouldRefresh;
         }
     }
 
