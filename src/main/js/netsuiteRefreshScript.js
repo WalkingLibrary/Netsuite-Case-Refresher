@@ -53,14 +53,13 @@ let main = function ()
         let refreshButtonPath = [0, 2, 2];
         let refreshButton = followChildPath(refreshButtonPath, caseDiv);
 
+
         if (refreshButton === undefined || refreshButton.title !== "Refresh")
         {
             console.error("Could not find the Refresh Button.\n" + errorMessage);
             return;
         }
-
-        console.log(refreshButton);
-
+        refreshButton.onclick = updateRefreshTime;
 
         // Start the Auto Refresh Process
         let refreshTimeMinutes = 5; // This is in Min
@@ -75,19 +74,9 @@ let main = function ()
         //This function calls it's self and refreshCases Function every [Specified amount of time]
         let recursiveFunction = function ()
         {
-            let currentTime = new Date();
+
             if (shouldRefresh)
             {
-                let currentMinutes = "" + currentTime.getMinutes();
-                currentMinutes = currentMinutes.length >= 2 ? currentMinutes : "0" + currentMinutes;
-                let refreshTime = currentTime.getHours() + ":" + currentMinutes;
-                //Print the Refresh time to the Console
-                console.log("Refreshing Cases - " + refreshTime);
-
-                //Update the Refresh time on the Refresh UI
-                let lastRefreshDisplay = document.getElementById("lastRefresh");
-                lastRefreshDisplay.innerText = "Last Refresh: " + refreshTime;
-
 
                 refreshCases(refreshButton);
             }
@@ -103,6 +92,20 @@ let main = function ()
         recursiveFunction();
         console.log("Auto Refresher Script Setup Successful");
     };
+
+    let updateRefreshTime = function ()
+    {
+        let currentTime = new Date();
+        let currentMinutes = "" + currentTime.getMinutes();
+        currentMinutes = currentMinutes.length >= 2 ? currentMinutes : "0" + currentMinutes;
+        let refreshTime = currentTime.getHours() + ":" + currentMinutes;
+        //Print the Refresh time to the Console
+        console.log("Refreshing Cases - " + refreshTime);
+
+        //Update the Refresh time on the Refresh UI
+        let lastRefreshDisplay = document.getElementById("lastRefresh");
+        lastRefreshDisplay.innerText = "Last Refresh: " + refreshTime;
+    }
 
 
     let followChildPath = function (childPathArray, elementToTraverse)
