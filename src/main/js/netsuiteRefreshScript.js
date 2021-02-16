@@ -3,11 +3,17 @@ let main = function ()
     let shouldRefresh = true;
     let setUpAutoRefresh = function ()
     {
-        /* To Use this Script open the browser's console while on the Netsuite Dashboard Page
+        /*
+         * @Author Caleb Warren (Walking_Library)
+         * @Last Updated - Feb 16, 2021
+         *
+         * To Use this Script open the browser's console while on the Netsuite Dashboard Page
          * and paste it in and Enjoy.
          *
-         * Note: It will not auto re-add it's self so you have to do the above every time you leave the page
+         * WARNING: Netsuite is liable to change and break this script.
+         * SPECIAL NOTE: Testing and Design was done in FIREFOX, Using Firefox may resolve issues.
          *
+         * Note: It will not auto re-add it's self so you have to do the above every time you leave the page
          *
          * Note: It Should Notify you with a sound and an alert if a new case has popped up
          *
@@ -28,12 +34,15 @@ let main = function ()
 
         let casesDivNodeList = document.querySelectorAll(casesDivSpecialIdentifier);
 
+
+        let errorMessage = "Make sure you are on the Dashboard Page and have the Cases Tab as a Widget.\n" +
+            "If you are on the Dashboard page with the Cases Tab present the Script may have Broke.\n" +
+            "Sorry for the Inconvenience :(";
+
         if (casesDivNodeList.length > 1 || casesDivNodeList.length === 0)
         {
-            console.error("Could not Find the Cases Div.\n" +
-                "Make sure you are on the Dashboard Page and have the Cases Tab as a Widget.\n" +
-                "If you are on the Dashboard page with the Cases Tab present the Script may have Broke.\n" +
-                "Sorry for the Inconvenience :(");
+            console.error("Could not Find the Cases Div.\n" + errorMessage);
+
             return;
         }
 
@@ -43,6 +52,13 @@ let main = function ()
         //Get the Refresh Button
         let refreshButtonPath = [0, 2, 2];
         let refreshButton = followChildPath(refreshButtonPath, caseDiv);
+
+        if (refreshButton === undefined || refreshButton.title !== "Refresh")
+        {
+            console.error("Could not find the Refresh Button.\n" + errorMessage);
+            return;
+        }
+
         console.log(refreshButton);
 
 
@@ -149,6 +165,7 @@ let main = function ()
         }
 
         //To avoid spaming the notification sound we only return true when the amount of tickets is greater than the previous amount
+        //we still need to update the amount of tickets
         if (previousAmountOfTickets !== amountOfTickets)
         {
 
