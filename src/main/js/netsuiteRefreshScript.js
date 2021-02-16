@@ -20,7 +20,7 @@ let main = function ()
          * Display the UI
          *
          * */
-        console.log("Setting Up Auto Refresh");
+        console.log("Setting Up Auto Refresher");
 
         //Grab the Cases Element
 
