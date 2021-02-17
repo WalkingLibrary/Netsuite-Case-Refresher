@@ -62,7 +62,7 @@ let main = function ()
         refreshButton.onclick = updateRefreshTime;
 
         // Start the Auto Refresh Process
-        let refreshTimeMinutes = 3; // This is in Min
+        let refreshTimeMinutes = .15; // This is in Min
         //NOTE: you can change this to make it longer or faster refresh rates
 
         //We do math to figure out how many milliseconds the minutes are
@@ -165,7 +165,7 @@ let main = function ()
                 let currentTicketID = currentChild.id;
                 if (defaultTableBodyChildIDs.indexOf(currentTicketID) < 0 && currentTicketID !== "")
                 {
-                    ticketString += currentChild.innerHTML;
+                    ticketString += currentChild.id;
                     amountOfTickets++;
                 }
             }
@@ -179,6 +179,7 @@ let main = function ()
             if (previousAmountOfTickets < amountOfTickets)
             {
                 previousAmountOfTickets = amountOfTickets;
+                previousTicketString = ticketString;
                 return true;
             }
             previousAmountOfTickets = amountOfTickets;
@@ -187,10 +188,13 @@ let main = function ()
 
         if (previousTicketString !== ticketString && amountOfTickets !== 0)
         {
+
+            console.log("Previous Ticket String: " + previousTicketString);
+            console.log("Current Ticket String: " + ticketString);
             previousTicketString = ticketString;
             return true;
         }
-
+        previousTicketString = ticketString;
 
         return false;
     }
