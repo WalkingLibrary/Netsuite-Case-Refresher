@@ -187,6 +187,7 @@ let main = function ()
 
         if (previousTicketString !== ticketString && amountOfTickets !== 0)
         {
+            previousTicketString = ticketString;
             return true;
         }
 
