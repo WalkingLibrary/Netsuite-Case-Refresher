@@ -62,7 +62,7 @@ let main = function ()
         refreshButton.onclick = updateRefreshTime;
 
         // Start the Auto Refresh Process
-        let refreshTimeMinutes = .15; // This is in Min
+        let refreshTimeMinutes = 5; // This is in Min
         //NOTE: you can change this to make it longer or faster refresh rates
 
         //We do math to figure out how many milliseconds the minutes are
@@ -189,8 +189,6 @@ let main = function ()
         if (previousTicketString !== ticketString && amountOfTickets !== 0)
         {
 
-            console.log("Previous Ticket String: " + previousTicketString);
-            console.log("Current Ticket String: " + ticketString);
             previousTicketString = ticketString;
             return true;
         }
